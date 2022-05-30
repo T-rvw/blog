@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>自制游戏引擎 - 图形API | Wind Soul</title><meta name="author" content="Drimoon"><meta name="copyright" content="Drimoon"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="游戏引擎RHI目前选用的是bgfx，目前体会到的好处是bgfx的生态不错，有比较多的例子工程，网络资料，开源工具库。比如说Real-Time Polygonal-Light Shading with Linearly Transformed Cosines这篇论文的代码实现是bgfx，理解bgfx之后很方便阅读；比如说Github上的LightMap开源烘焙工具XAtalas，也是基于bgfx作为">
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>自制游戏引擎 - 图形API | Wind Soul</title><meta name="author" content="Drimoon"><meta name="copyright" content="Drimoon"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="游戏引擎RHI目前选用的是bgfx  Pros 可以参考的代码比较多 Real-Time Polygonal-Light Shading with Linearly Transformed Cosines论文作者的原文实现也用了bgfx 论文作者博客，包含可运行的例子程序 - https:&#x2F;&#x2F;eheitzresearch.wordpress.com&#x2F;415-2&#x2F; bgfx作者希望有人帮忙把这个例子">
 <meta property="og:type" content="article">
 <meta property="og:title" content="自制游戏引擎 - 图形API">
 <meta property="og:url" content="https://trvw.github.io/blog/2022/05/28/game_engine_rhi/index.html">
 <meta property="og:site_name" content="Wind Soul">
-<meta property="og:description" content="游戏引擎RHI目前选用的是bgfx，目前体会到的好处是bgfx的生态不错，有比较多的例子工程，网络资料，开源工具库。比如说Real-Time Polygonal-Light Shading with Linearly Transformed Cosines这篇论文的代码实现是bgfx，理解bgfx之后很方便阅读；比如说Github上的LightMap开源烘焙工具XAtalas，也是基于bgfx作为">
+<meta property="og:description" content="游戏引擎RHI目前选用的是bgfx  Pros 可以参考的代码比较多 Real-Time Polygonal-Light Shading with Linearly Transformed Cosines论文作者的原文实现也用了bgfx 论文作者博客，包含可运行的例子程序 - https:&#x2F;&#x2F;eheitzresearch.wordpress.com&#x2F;415-2&#x2F; bgfx作者希望有人帮忙把这个例子">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
 <meta property="article:published_time" content="2022-05-28T05:10:43.823Z">
-<meta property="article:modified_time" content="2022-05-29T18:41:57.432Z">
+<meta property="article:modified_time" content="2022-05-30T10:47:03.706Z">
 <meta property="article:author" content="Drimoon">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://trvw.github.io/blog/2022/05/28/game_engine_rhi/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
@@ -52,7 +52,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2022-05-30 02:41:57'
+  postUpdate: '2022-05-30 18:47:03'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -141,9 +141,126 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/blog/">Wind Soul</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">自制游戏引擎 - 图形API</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-05-28T05:10:43.823Z" title="Created 2022-05-28 13:10:43">2022-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-05-29T18:41:57.432Z" title="Updated 2022-05-30 02:41:57">2022-05-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="自制游戏引擎 - 图形API"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>游戏引擎RHI目前选用的是bgfx，目前体会到的好处是bgfx的生态不错，有比较多的例子工程，网络资料，开源工具库。比如说Real-Time Polygonal-Light Shading with Linearly Transformed Cosines这篇论文的代码实现是bgfx，理解bgfx之后很方便阅读；比如说Github上的LightMap开源烘焙工具XAtalas，也是基于bgfx作为Viewer，可以学习；另外，我的世界也使用了bgfx作为图形API，对bgfx的质量有一定保证。</p>
-<p>缺点是包袱比较多，对新旧的所有图形API都做了支持，抽象到了同一套API中，这就让bgfx的上层API看起来不够现代化。DX12&#x2F;Vulkan这些现代图形API希望的是暴露low level api，把更多的控制权交给上层图形开发者。但bgfx的api设计上我们仍然是在用high level的bgfx api写图形代码，所以bgfx使用的第一个工作是弄清楚它在DX12&#x2F;Vulkan这些现代化渲染后端下的实现，能发挥到什么样的程度。</p>
-<p>另一个工作是，bgfx的这些api是有状态的命令式api，直接拿来写渲染逻辑功能会比较麻烦，我们需要对它做一套抽象层，封装出基本的DrawCall对象，DrawCall队列，RenderPass，同一个RenderPass渲染到多个ViewPort之类的概念，更进阶的是能够实现出FrameGraph提出的概念，在编写渲染逻辑功能上能够现代化。现代化的好处也会让其他模块受益，比如编辑器层我们可以做到可视化的FrameGraph展示，方便开发者观察每一个渲染步骤得到的效果，来进行调试，优化。</p>
-<h2 id="bgfx源码剖析"><a href="#bgfx源码剖析" class="headerlink" title="bgfx源码剖析"></a>bgfx源码剖析</h2><p>熟悉某一套图形API的概念之后，bgfx的大多数代码还是很好阅读的，虽然bgfx本身会发明一些特殊的概念出来，需要仔细甄别。</p>
-<p>TBD</p>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://trvw.github.io/blog">Drimoon</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://trvw.github.io/blog/2022/05/28/game_engine_rhi/">https://trvw.github.io/blog/2022/05/28/game_engine_rhi/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/blog/2022/05/28/game_engine_particle_system/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">自制游戏引擎 - 粒子系统</div></div></a></div><div class="next-post pull-right"><a href="/blog/2022/05/28/game_engine_design/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">自制游戏引擎 - 软件设计</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Drimoon</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/T-rvw"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/T-rvw" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:jiajun.coding@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">随笔</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#bgfx%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">bgfx源码剖析</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/30/game_engine_threading/" title="自制游戏引擎 - 多线程"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 多线程"/></a><div class="content"><a class="title" href="/blog/2022/05/30/game_engine_threading/" title="自制游戏引擎 - 多线程">自制游戏引擎 - 多线程</a><time datetime="2022-05-29T18:12:08.566Z" title="Created 2022-05-30 02:12:08">2022-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_particle_system/" title="自制游戏引擎 - 粒子系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 粒子系统"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_particle_system/" title="自制游戏引擎 - 粒子系统">自制游戏引擎 - 粒子系统</a><time datetime="2022-05-28T13:52:36.575Z" title="Created 2022-05-28 21:52:36">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_rhi/" title="自制游戏引擎 - 图形API"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 图形API"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_rhi/" title="自制游戏引擎 - 图形API">自制游戏引擎 - 图形API</a><time datetime="2022-05-28T05:10:43.823Z" title="Created 2022-05-28 13:10:43">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_design/" title="自制游戏引擎 - 软件设计"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 软件设计"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_design/" title="自制游戏引擎 - 软件设计">自制游戏引擎 - 软件设计</a><time datetime="2022-05-28T05:10:16.553Z" title="Created 2022-05-28 13:10:16">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/27/game_engine_make/" title="自制游戏引擎 - 工程构建"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 工程构建"/></a><div class="content"><a class="title" href="/blog/2022/05/27/game_engine_make/" title="自制游戏引擎 - 工程构建">自制游戏引擎 - 工程构建</a><time datetime="2022-05-27T13:49:52.502Z" title="Created 2022-05-27 21:49:52">2022-05-27</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Drimoon</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/blog/">Wind Soul</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">自制游戏引擎 - 图形API</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-05-28T05:10:43.823Z" title="Created 2022-05-28 13:10:43">2022-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-05-30T10:47:03.706Z" title="Updated 2022-05-30 18:47:03">2022-05-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="自制游戏引擎 - 图形API"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>游戏引擎RHI目前选用的是bgfx</p>
+<ul>
+<li>Pros<ul>
+<li>可以参考的代码比较多<ul>
+<li>Real-Time Polygonal-Light Shading with Linearly Transformed Cosines论文作者的原文实现也用了bgfx<ul>
+<li>论文作者博客，包含可运行的例子程序 - <a target="_blank" rel="noopener" href="https://eheitzresearch.wordpress.com/415-2/">https://eheitzresearch.wordpress.com/415-2/</a></li>
+<li>bgfx作者希望有人帮忙把这个例子换个小场景，然后port进来 - <a target="_blank" rel="noopener" href="https://github.com/bkaradzic/bgfx/issues/1609">https://github.com/bkaradzic/bgfx/issues/1609</a></li>
+</ul>
+</li>
+<li>Github上的LightMap开源烘焙工具XAtalas，也是基于bgfx作为3D查看器</li>
+<li>我的世界也使用了bgfx作为图形API，对bgfx的质量有一定保证</li>
+<li>更多例子可以查看Github bgfx的README.md</li>
+</ul>
+</li>
+<li>兼容性，基本上所有图形API，平台都有支持，而且是经过测试的</li>
+</ul>
+</li>
+<li>Cons<ul>
+<li>包袱多，对新旧两三代图形API都做了支持，抽象到同一套API中，让bgfx的上层API看起来太high level，与现代图形API违背<ul>
+<li>Diligent Engine会比较现代化，不支持过于陈旧的图形AP - <a target="_blank" rel="noopener" href="https://github.com/DiligentGraphics/DiligentEngine">https://github.com/DiligentGraphics/DiligentEngine</a></li>
+</ul>
+</li>
+<li>虽然bgfx API是high level的，但实际上直接拿这些API去写图形效果会很累，仍然需要再次进行high level抽象</li>
+</ul>
+</li>
+</ul>
+<h2 id="bgfx入门"><a href="#bgfx入门" class="headerlink" title="bgfx入门"></a>bgfx入门</h2><ul>
+<li>通过GENie编译<ul>
+<li>–with-windows指定使用的Windows SDK版本，–with-examples可以把bgfx的几十个参考例子生成出来，–with-tools可以生成bgfx工具层项目，比如基于glsl的shader跨平台预处理器，模型&#x2F;贴图的二进制编译工具<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd &quot;bgfx&quot;</span><br><span class="line">&quot;../bx/tools/bin/windows/genie.exe&quot; --with-windows=10.0 --with-examples --with-tools vs2022`</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>打开生成的.build&#x2F;projects&#x2F;vs2022&#x2F;bgfx.sln，工程分为三块<ul>
+<li>libs<ul>
+<li>默认通过静态库的形式链接bgfx等库函数，也可以在make时指定动态库的形式</li>
+</ul>
+</li>
+<li>tools<ul>
+<li>shader&#x2F;texture&#x2F;model资源编译工具</li>
+</ul>
+</li>
+<li>examples<ul>
+<li>example-common是一个简单的例子程序框架，方便编写其他例子<ul>
+<li>包含的第三方库<ul>
+<li>dear-imgui ：一个旧版ImGui版本，被bgfx修改后集成</li>
+<li>meshoptimizer ：模型优化工具，可以优化顶点，索引数据的布局，模型自动减面</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>其他example工程代码是通过继承一个example-common提供的带有init，shutdown，update三个纯虚函数的接口类实现的<ul>
+<li>以example-00-helloworld为例<ul>
+<li>init中主要做了三件事<ul>
+<li>bgfx::init函数负责了图形API初始化的所有工作<ul>
+<li>举一些重要的Init结构体参数做说明<ul>
+<li>type是RendererType::Enum枚举类型，罗列了bgfx支持的所有图形API类型，每一个类型都对应了libs&#x2F;bgfx&#x2F;src目录下的一份渲染后端代码.h&#x2F;.cpp。比如DirectX11，就对应了renderer_d3d11.h和renderer_d3d11.cpp</li>
+<li>vendorId可以指定使用某一个品牌的显卡，或者是软光栅模拟；如果同一品牌的有两张显卡，那么可以用deviceId来指定用哪一张</li>
+<li>capabilities可以指定一些显卡特性是否要开启</li>
+<li>debug和profile是开发期间可以打开，输出更多的调试信息到Output窗口</li>
+<li>platformData可以指定平台相关参数，比如我想把图形API渲染的画面输出到一个Windows窗口上，那么我可以指定platformData.nwh为该窗口的句柄，nwh意为native window handle。我还是推荐长命名的方式，省略式的命名方式在大规模的工程中增大了理解难度，比如dir可以是direction，也可以是directory</li>
+<li>resolution可以指定渲染目标的FrameBuffer尺寸，数量等</li>
+<li>Limits可以对Command Buffer，以及模型相关的Vertex Buffer&#x2F;Index Buffer做限制<ul>
+<li>Command Buffer是现代图形API里的概念，主体思想是CPU和GPU的交流就像客户端和服务器异步通信一样，每一个图形API操作都可以理解成是发送一条命令&#x2F;消息，进行一次图形操作的背后是多条图形API的组合。因为GPU算力是远大于CPU的，所以当CPU单核提交渲染命令时，GPU可能会因为CPU布置任务太慢太少而闲置下来。这种情况下，现代图形API的设计是每一帧的画面渲染需要的命令由多个线程去提交，每个线程都拥有一个Command List，去塞该线程提交的Command，然后一帧命令准备完毕，再从每个线程的Command List汇总所有Command塞到图形API的Command Buffer中，一次性提交给GPU，等待绘制</li>
+<li>在bgfx的概念里，bgfx::submit操作会将一次物体绘制需要的资源句柄收集起来，对应一个draw call；每个渲染线程可以分配一个bgfx::encoder，这个encoder就记录着draw call需要的资源句柄。等待bgfx::frame的调用，去一次性通过图形API提交渲染数据到GPU上</li>
+</ul>
+</li>
+<li>allocator可以指定一个定制化的内存分配器，但需要保证线程安全</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>bgfx::setViewClear<ul>
+<li>bgfx的view是一个重要的概念，不同于常规理解的viewport，这里的view更像是一个draw call队列，每个view有自己的view id，也就是bgfx::setViewClear的第一个参数，你还会看到很多bgfx api要求指定view id，比如前面提到的bgfx::submit创建draw call，它就需要指定一个view id，来把draw call创建到某一个draw call队列里，也就是view。</li>
+<li>view的作用有很多，比如图形引擎经常需要做的一件事情是对draw call对象进行各种排序，来达到渲染目的。比如说透明物体渲染，那么就可以把所有透明物体塞到一个view里，然后通过bgfx::setViewMode去指定队列内draw call优先级，没错，draw call队列是一个优先队列</li>
+<li>view也可以用于区分不同目的draw call，保持渲染模块的整洁，比如ingame GUI的渲染可以指定ViewId为0，3D场景的不透明物体渲染指定ViewId为1，透明物体渲染指定ViewId为2，…，至多可以指定0~255一共256个view</li>
+</ul>
+</li>
+<li>imguiCreate<ul>
+<li>进行ImGui的初始化，跟进到example-common里的ImGui框架，你会发现ImGui API调用产生的绘制数据在框架内转译成了bgfx API调用，再自行塞到前面提到的bgfx::encoder当中，等待bgfx::frame提交</li>
+</ul>
+</li>
+<li>其他背后的事<ul>
+<li>比如图形Device以及Context的创建</li>
+<li>FrameBuffer创建完了之后，SwapChain的设置</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>shutdown做了两件事<ul>
+<li>先销毁ImGui把bgfx::encoder释放掉，最后再销毁bgfx，也就是把图形Device，Context这些Kill掉</li>
+</ul>
+</li>
+<li>update在游戏循环内，需要做的就是调用bgfx::setXXX等API填充好每一帧需要的渲染指令，最后由bgfx::frame提交到GPU<ul>
+<li>helloworld例子仅仅绘制ImGui的example dialog作为演示</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>其他example例子的解释<ul>
+<li>example-05-instancing : gpu instance渲染</li>
+<li>example-12-lod : 一种edge collapse方式的模型自动减面算法</li>
+<li>example-13-stencil : 模板测试</li>
+<li>example-17-drawstress : 多个渲染线程</li>
+<li>example-27-terrain : 地形</li>
+<li>example-32-particles : GPU粒子实现</li>
+<li>example-37-sky : 大气散射，天光</li>
+<li>example-38-bloom : 后处理bloom</li>
+<li>example-46-fsr : AMD FSR超采样</li>
+<li>TBD</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="bgfx源码剖析"><a href="#bgfx源码剖析" class="headerlink" title="bgfx源码剖析"></a>bgfx源码剖析</h2><p>TBD</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>bgfx的一篇中文博客 - <a target="_blank" rel="noopener" href="https://www.cnblogs.com/crazylights/p/13555816.html">https://www.cnblogs.com/crazylights/p/13555816.html</a></li>
+<li>TheForge - <a target="_blank" rel="noopener" href="https://github.com/ConfettiFX/The-Forge">https://github.com/ConfettiFX/The-Forge</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://trvw.github.io/blog">Drimoon</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://trvw.github.io/blog/2022/05/28/game_engine_rhi/">https://trvw.github.io/blog/2022/05/28/game_engine_rhi/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/blog/2022/05/28/game_engine_particle_system/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">自制游戏引擎 - 粒子系统</div></div></a></div><div class="next-post pull-right"><a href="/blog/2022/05/28/game_engine_design/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">自制游戏引擎 - 软件设计</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Drimoon</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/T-rvw"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/T-rvw" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:jiajun.coding@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">随笔</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#bgfx%E5%85%A5%E9%97%A8"><span class="toc-number">1.</span> <span class="toc-text">bgfx入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bgfx%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">bgfx源码剖析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">3.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/30/game_engine_threading/" title="自制游戏引擎 - 多线程"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 多线程"/></a><div class="content"><a class="title" href="/blog/2022/05/30/game_engine_threading/" title="自制游戏引擎 - 多线程">自制游戏引擎 - 多线程</a><time datetime="2022-05-29T18:12:08.566Z" title="Created 2022-05-30 02:12:08">2022-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_particle_system/" title="自制游戏引擎 - 粒子系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 粒子系统"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_particle_system/" title="自制游戏引擎 - 粒子系统">自制游戏引擎 - 粒子系统</a><time datetime="2022-05-28T13:52:36.575Z" title="Created 2022-05-28 21:52:36">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_rhi/" title="自制游戏引擎 - 图形API"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 图形API"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_rhi/" title="自制游戏引擎 - 图形API">自制游戏引擎 - 图形API</a><time datetime="2022-05-28T05:10:43.823Z" title="Created 2022-05-28 13:10:43">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_design/" title="自制游戏引擎 - 软件设计"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 软件设计"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_design/" title="自制游戏引擎 - 软件设计">自制游戏引擎 - 软件设计</a><time datetime="2022-05-28T05:10:16.553Z" title="Created 2022-05-28 13:10:16">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/27/game_engine_make/" title="自制游戏引擎 - 工程构建"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 工程构建"/></a><div class="content"><a class="title" href="/blog/2022/05/27/game_engine_make/" title="自制游戏引擎 - 工程构建">自制游戏引擎 - 工程构建</a><time datetime="2022-05-27T13:49:52.502Z" title="Created 2022-05-27 21:49:52">2022-05-27</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Drimoon</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
