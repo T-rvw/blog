@@ -7,7 +7,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
 <meta property="article:published_time" content="2022-05-27T13:49:52.502Z">
-<meta property="article:modified_time" content="2022-05-29T18:41:39.253Z">
+<meta property="article:modified_time" content="2022-05-31T19:42:45.801Z">
 <meta property="article:author" content="Drimoon">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://trvw.github.io/blog/2022/05/27/game_engine_make/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
@@ -52,7 +52,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2022-05-30 02:41:39'
+  postUpdate: '2022-06-01 03:42:45'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -141,7 +141,7 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/blog/">Wind Soul</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">自制游戏引擎 - 工程构建</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-05-27T13:49:52.502Z" title="Created 2022-05-27 21:49:52">2022-05-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-05-29T18:41:39.253Z" title="Updated 2022-05-30 02:41:39">2022-05-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="自制游戏引擎 - 工程构建"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>作为一个跨平台的复杂项目，我们首先要支持在Windows下用Visual Studio开发，Mac下用XCode开发，IDE(Integrated Development Environment)新版本发布也能快速迁移过去，或者打算使用特定的编译器脱离IDE自带的，来达到不同平台下都能顺畅地发布游戏程序。同时，在项目结构上，我们也希望能尽量地简单直接，清晰，比如说我们自己设计一些叫Binary，Intermediate的文件夹去存放编译出来的二进制文件，临时文件；比如按引擎功能模块去建立Rendering，Physical，Audio等文件夹分门别类地存放代码，再自动地按照目录结构包含到项目中。我们需要使用现代化的make工具来完成这些工作。</p>
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/blog/">Wind Soul</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">自制游戏引擎 - 工程构建</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-05-27T13:49:52.502Z" title="Created 2022-05-27 21:49:52">2022-05-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-05-31T19:42:45.801Z" title="Updated 2022-06-01 03:42:45">2022-06-01</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="自制游戏引擎 - 工程构建"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>作为一个跨平台的复杂项目，我们首先要支持在Windows下用Visual Studio开发，Mac下用XCode开发，IDE(Integrated Development Environment)新版本发布也能快速迁移过去，或者打算使用特定的编译器脱离IDE自带的，来达到不同平台下都能顺畅地发布游戏程序。同时，在项目结构上，我们也希望能尽量地简单直接，清晰，比如说我们自己设计一些叫Binary，Intermediate的文件夹去存放编译出来的二进制文件，临时文件；比如按引擎功能模块去建立Rendering，Physical，Audio等文件夹分门别类地存放代码，再自动地按照目录结构包含到项目中。我们需要使用现代化的make工具来完成这些工作。</p>
 <h2 id="make工具介绍"><a href="#make工具介绍" class="headerlink" title="make工具介绍"></a>make工具介绍</h2><p>开发人员早期会使用某个IDE进行开发工作，比如我在初学者阶段写一个窗口程序去绘制2D&#x2F;3D图形时，会对着Google搜怎么使用Visual Studio菜单里那么多的设置选项去达到某个目的。而make工具则是通过编写makefile脚本来完成这件事，再通过不同IDE自带的make工具生成出配置相同的项目文件，比如VS的.sln。VS的Make工具就叫nmake，还有linux下常用的make。</p>
 <ul>
 <li>各类make工具<ul>
@@ -189,13 +189,134 @@
 </li>
 </ul>
 <p>从这些工具里挑选，我倾向于使用非DSL作为makefile脚本的make工具，所以最常见的cmake我并不喜欢。premake或者xmake我觉得是可以尝试的两个make工具，bazel也可以尝试。<br>考虑到目前经常打交道的RHI，bgfx也是premake的分支版本，用法基本都一致，所以我选择了premake，这样子我们只需要学习一次，就能同时满足读懂bgfx构建，构建自己的引擎项目两个需求。<br>开发中遇到麻烦的问题，我们再考虑给premake提交PR，或者切换到xmake之类的试试看。</p>
-<h2 id="Premake教程"><a href="#Premake教程" class="headerlink" title="Premake教程"></a>Premake教程</h2><p>TBD.</p>
-<h2 id="目录结构设计"><a href="#目录结构设计" class="headerlink" title="目录结构设计"></a>目录结构设计</h2><p>以下是项目整体目录结构的当前设计，以Visual Stuido为例：</p>
+<h2 id="Lua"><a href="#Lua" class="headerlink" title="Lua"></a>Lua</h2><p>学习Premake之前可以快速了解下lua的语法。lua常用于游戏开发，这门语言的特点是很容易集成到自己的C&#x2F;C++项目中充当脚本模块。不同于python这类设计为一门完整的可独立开发应用的语言，lua除了基本语法和一些系统函数外，什么库也没有，因为它的目的是轻巧，嵌入到工程中充当脚本模块，需要支持哪些功能完全由该工程自己定制，也就是工程自己去绑定C&#x2F;C++接口到lua层。</p>
+<p>很像早期的游戏引擎&#x2F;软件开发，某些软件会自己定制化一门简单的脚本语言，写好对应的解释器，然后把这门脚本开放给用户，或者上层开发者使用。比如说Maya的mel脚本，或者某些游戏引擎的自定义脚本。而lua的出现，主要是让这些工程的开发者不必自己设计新的脚本语言，达到统一性。至于热更新之类经常被人提起的优点，是因为lua在不开启luaJIT时纯粹解释执行，而脚本语言大多都有纯解释执行的模式，所以热更新并非使用lua的理由。</p>
+<p>另外，对编程语言设计感兴趣也可以自己编译lua源代码，调试进去看看内部是怎么运转的，lua也是一个很适合新手学习的开源语言类项目，总共只有一万左右的代码。可以让开发者快速掌控全局或者魔改，这也是选择lua作为脚本模块的一个理由。</p>
+<p>对于premake的使用，我们只需要学习简单的lua特性即可：</p>
+<ul>
+<li>local声明的含义</li>
+<li>变量有哪些类型？<ul>
+<li>number</li>
+<li>bool<ul>
+<li>nil也属于false</li>
+</ul>
+</li>
+<li>string</li>
+<li>nil<ul>
+<li>常见的函数参数会在函数定义最开始的时候写成是name &#x3D; name or “Unknown”，怎么理解？</li>
+</ul>
+</li>
+<li>table<ul>
+<li>增删改查操作</li>
+</ul>
+</li>
+<li>function</li>
+</ul>
+</li>
+<li>变量命名使用什么命名法比较好？<ul>
+<li>建议带类型前缀的方式，因为脚本语言变量是万能类型并且没有编译检查</li>
+</ul>
+</li>
+<li>if分支，for循环，while循环等控制结构的编写</li>
+<li>如何定义全局变量，全局变量可以跨不同的lua文件，是因为什么？( _G表 )</li>
+<li>如何使用多个lua文件，dofile和require是什么？</li>
+<li>自带库的简单API，比如获取当前时间，获取当前工作目录，文件操作等</li>
+<li>超出premake使用需求的部分<ul>
+<li>脚本语言中，把function作为变量一样传递的好处是什么？( 动态绑定 )</li>
+<li>变量赋值哪些情况是引用，哪些情况是复制 (或者说弱引用&#x2F;强引用)</li>
+<li>table背后数据结构是什么？关联数组是什么？</li>
+<li>table使用要注意什么？什么情况会引起空洞？</li>
+<li>引入OOP编程</li>
+<li>元表，metatable</li>
+<li>自定义数据类型，userdata</li>
+<li>闭包，在函数内定义新的函数，在声明范围内可以调用</li>
+<li>luaJIT的使用，以及限制</li>
+</ul>
+</li>
+</ul>
+<h2 id="Premake"><a href="#Premake" class="headerlink" title="Premake"></a>Premake</h2><p>Premake构建工程需要准备两样东西，一个是premake5.exe(数字5对应当前premake版本)，它集成了一个lua解释器以及按premake api翻译到不同IDE，平台工程规则的逻辑，使用的时候它默认会查找premake5.lua作为程序入口点。</p>
+<p>以在Visual Studio 2022中以单个main.cpp构建控制台程序为例，我们要做的步骤是：</p>
+<ul>
+<li>创建一个Solution，比如叫Tutorials<ul>
+<li>在Solution下创建一个Project, 比如叫Tutorial0-HelloWorld<ul>
+<li>设置为C++项目，指定C++版本，比如C++ 17</li>
+<li>设置成控制台应用程序，或者新的Visual Studio直接叫应用程序</li>
+<li>在这个Project的某个筛选器下(通常是Source)，添加或者新建main.cpp代码文件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Build，运行</li>
+</ul>
+<p>我们用Premake来实践一下上面的步骤：</p>
+<ul>
+<li>新建一个项目文件夹，比如叫awesome-premake</li>
+<li>从官网下载一个Windows版本的premake5.exe，丢在根目录</li>
+<li>新建一个叫premake5.lua的脚本，编写premake脚本(后面再谈怎么写)</li>
+<li>新建一个叫source的文件夹，里面新建一个叫main.cpp的文件，写好hello world</li>
+<li>在根目录打开命令行执行<code>./premake5.exe vs2022</code>，生产了.sln文件</li>
+<li>打开生成好的sln, Build，运行</li>
+</ul>
+<p>目录结构是：</p>
+<ul>
+<li>awesome-premake<ul>
+<li>premake5.exe</li>
+<li>premake5.lua</li>
+<li>source<ul>
+<li>main.cpp</li>
+</ul>
+</li>
+<li>将在此出现Tutorials.sln</li>
+</ul>
+</li>
+</ul>
+<p>premake5.lua的内容是：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">workspace(<span class="string">&quot;Tutorials&quot;</span>)</span><br><span class="line">	configurations &#123; <span class="string">&quot;Debug&quot;</span>, <span class="string">&quot;Release&quot;</span> &#125;</span><br><span class="line">	</span><br><span class="line">project(<span class="string">&quot;Tutorial0-HelloWorld&quot;</span>)</span><br><span class="line">	kind(<span class="string">&quot;ConsoleApp&quot;</span>)</span><br><span class="line">	language(<span class="string">&quot;C++&quot;</span>)</span><br><span class="line">	cppdialect(<span class="string">&quot;C++17&quot;</span>)</span><br><span class="line">	</span><br><span class="line">	targetdir(<span class="string">&quot;bin&quot;</span>)</span><br><span class="line">	files &#123;</span><br><span class="line">		<span class="string">&quot;source/main.cpp&quot;</span></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单解释一下，workspace对应于solution的概念，是多个projects的容器；configurations是项目build的配置类型；project就是项目描述，kind可以指定不同类型的工程，比如ConsoleApp就是控制台应用程序；language和cppdialect用于语言是C++，并且使用版本是C++ 17；targetdir是项目build生成的二进制文件存放目录；files用于添加代码文件到project中。</p>
+<p>premake脚本是通过从上往下依次调用premake api来描述项目工程，具体api可以查文档：<a target="_blank" rel="noopener" href="https://premake.github.io/docs/">https://premake.github.io/docs/</a> 。</p>
+<p>在跑完premake命令，并且打开sln运行过后，我们的目录变成了：</p>
+<ul>
+<li>awesome-premake<ul>
+<li>premake5.exe</li>
+<li>premake5.lua</li>
+<li>source<ul>
+<li>main.cpp</li>
+</ul>
+</li>
+<li>bin<ul>
+<li>Tutorial0-HelloWorld.exe</li>
+<li>Tutorial0-HelloWorld.pdb</li>
+</ul>
+</li>
+<li>obj<ul>
+<li>Debug<ul>
+<li>main.obj</li>
+<li>其他临时文件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Tutorial0-HelloWorld.vcxproj</li>
+<li>Tutorials.sln</li>
+</ul>
+</li>
+</ul>
+<p>至此，我们完成了一个最简单的基于premake的C++项目框架。这里仍然可以衍生一些新改进项：</p>
+<ul>
+<li>把命令行写到Windows下的bat，或者Mac下的cmd里，双击即可执行</li>
+<li>打开sln后，没发现有筛选器，如何添加进来？</li>
+<li>bin和obj，还有工程文件全部暴露在根目录，怎么让他们换个位置更整洁？</li>
+<li>Debug和Release两个不同配置怎么填写？比如我想让Release也能生成pdb，让Debug也能开启简单的优化</li>
+<li>…</li>
+</ul>
+<p>欢迎提问更多的如何改进premake工程，后面会以问题+解决方案的形式进行更新。</p>
+<h2 id="游戏引擎工程目录设计"><a href="#游戏引擎工程目录设计" class="headerlink" title="游戏引擎工程目录设计"></a>游戏引擎工程目录设计</h2><p>以下是项目整体目录结构的当前设计，以Visual Stuido为例：</p>
 <ul>
 <li>Root<ul>
-<li>Examples : 引擎功能用例<ul>
-<li>Example A : 用例A<ul>
-<li>Content<ul>
+<li>Projects : 引擎功能用例<ul>
+<li>Project A : 用例A<ul>
+<li>Asset<ul>
 <li>Audio</li>
 <li>Materials</li>
 <li>Textures</li>
@@ -218,7 +339,7 @@
 </ul>
 </li>
 <li>Engine<ul>
-<li>Build ：存放makefile，bat之类的自动构建工具和脚本</li>
+<li>Auto ：存放makefile，bat之类的自动构建工具和脚本</li>
 <li>Binaries ：生成的二进制文件，.dll, .exe<ul>
 <li>Mac</li>
 <li>Win64</li>
@@ -285,4 +406,9 @@
 </ul>
 </li>
 </ul>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://trvw.github.io/blog">Drimoon</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://trvw.github.io/blog/2022/05/27/game_engine_make/">https://trvw.github.io/blog/2022/05/27/game_engine_make/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/blog/2022/05/28/game_engine_design/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">自制游戏引擎 - 软件设计</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Drimoon</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/T-rvw"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/T-rvw" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:jiajun.coding@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">随笔</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#make%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">make工具介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Premake%E6%95%99%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">Premake教程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">3.</span> <span class="toc-text">目录结构设计</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/30/game_engine_threading/" title="自制游戏引擎 - 多线程"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 多线程"/></a><div class="content"><a class="title" href="/blog/2022/05/30/game_engine_threading/" title="自制游戏引擎 - 多线程">自制游戏引擎 - 多线程</a><time datetime="2022-05-29T18:12:08.566Z" title="Created 2022-05-30 02:12:08">2022-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_particle_system/" title="自制游戏引擎 - 粒子系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 粒子系统"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_particle_system/" title="自制游戏引擎 - 粒子系统">自制游戏引擎 - 粒子系统</a><time datetime="2022-05-28T13:52:36.575Z" title="Created 2022-05-28 21:52:36">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_rhi/" title="自制游戏引擎 - 图形API"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 图形API"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_rhi/" title="自制游戏引擎 - 图形API">自制游戏引擎 - 图形API</a><time datetime="2022-05-28T05:10:43.823Z" title="Created 2022-05-28 13:10:43">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_design/" title="自制游戏引擎 - 软件设计"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 软件设计"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_design/" title="自制游戏引擎 - 软件设计">自制游戏引擎 - 软件设计</a><time datetime="2022-05-28T05:10:16.553Z" title="Created 2022-05-28 13:10:16">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/27/game_engine_make/" title="自制游戏引擎 - 工程构建"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 工程构建"/></a><div class="content"><a class="title" href="/blog/2022/05/27/game_engine_make/" title="自制游戏引擎 - 工程构建">自制游戏引擎 - 工程构建</a><time datetime="2022-05-27T13:49:52.502Z" title="Created 2022-05-27 21:49:52">2022-05-27</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Drimoon</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+<h2 id="游戏引擎工程的Premake编写"><a href="#游戏引擎工程的Premake编写" class="headerlink" title="游戏引擎工程的Premake编写"></a>游戏引擎工程的Premake编写</h2><p>上述的工程目录基本上写完了，形成博客还需要花很多时间，TBD</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>更多了解Premake的资料 - <a target="_blank" rel="noopener" href="https://premake.github.io/community/support">https://premake.github.io/community/support</a></li>
+<li>遇到不支持的功能，改进源代码！ - <a target="_blank" rel="noopener" href="https://github.com/premake/premake-core">https://github.com/premake/premake-core</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://trvw.github.io/blog">Drimoon</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://trvw.github.io/blog/2022/05/27/game_engine_make/">https://trvw.github.io/blog/2022/05/27/game_engine_make/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/blog/2022/05/28/game_engine_design/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">自制游戏引擎 - 软件设计</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Drimoon</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/T-rvw"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/T-rvw" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:jiajun.coding@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">随笔</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#make%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">make工具介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lua"><span class="toc-number">2.</span> <span class="toc-text">Lua</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Premake"><span class="toc-number">3.</span> <span class="toc-text">Premake</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E5%B7%A5%E7%A8%8B%E7%9B%AE%E5%BD%95%E8%AE%BE%E8%AE%A1"><span class="toc-number">4.</span> <span class="toc-text">游戏引擎工程目录设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E5%B7%A5%E7%A8%8B%E7%9A%84Premake%E7%BC%96%E5%86%99"><span class="toc-number">5.</span> <span class="toc-text">游戏引擎工程的Premake编写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">6.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/30/game_engine_threading/" title="自制游戏引擎 - 多线程"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 多线程"/></a><div class="content"><a class="title" href="/blog/2022/05/30/game_engine_threading/" title="自制游戏引擎 - 多线程">自制游戏引擎 - 多线程</a><time datetime="2022-05-29T18:12:08.566Z" title="Created 2022-05-30 02:12:08">2022-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_particle_system/" title="自制游戏引擎 - 粒子系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 粒子系统"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_particle_system/" title="自制游戏引擎 - 粒子系统">自制游戏引擎 - 粒子系统</a><time datetime="2022-05-28T13:52:36.575Z" title="Created 2022-05-28 21:52:36">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_rhi/" title="自制游戏引擎 - 图形API"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 图形API"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_rhi/" title="自制游戏引擎 - 图形API">自制游戏引擎 - 图形API</a><time datetime="2022-05-28T05:10:43.823Z" title="Created 2022-05-28 13:10:43">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_design/" title="自制游戏引擎 - 软件设计"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 软件设计"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_design/" title="自制游戏引擎 - 软件设计">自制游戏引擎 - 软件设计</a><time datetime="2022-05-28T05:10:16.553Z" title="Created 2022-05-28 13:10:16">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/27/game_engine_make/" title="自制游戏引擎 - 工程构建"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 工程构建"/></a><div class="content"><a class="title" href="/blog/2022/05/27/game_engine_make/" title="自制游戏引擎 - 工程构建">自制游戏引擎 - 工程构建</a><time datetime="2022-05-27T13:49:52.502Z" title="Created 2022-05-27 21:49:52">2022-05-27</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Drimoon</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
