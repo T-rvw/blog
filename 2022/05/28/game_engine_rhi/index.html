@@ -7,7 +7,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
 <meta property="article:published_time" content="2022-05-28T05:10:43.823Z">
-<meta property="article:modified_time" content="2022-06-07T07:24:31.082Z">
+<meta property="article:modified_time" content="2022-06-07T07:26:27.586Z">
 <meta property="article:author" content="Drimoon">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://trvw.github.io/blog/2022/05/28/game_engine_rhi/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
@@ -52,7 +52,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2022-06-07 15:24:31'
+  postUpdate: '2022-06-07 15:26:27'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -141,7 +141,7 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/blog/">Wind Soul</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">自制游戏引擎 - 图形API</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-05-28T05:10:43.823Z" title="Created 2022-05-28 13:10:43">2022-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-06-07T07:24:31.082Z" title="Updated 2022-06-07 15:24:31">2022-06-07</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="自制游戏引擎 - 图形API"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>游戏引擎RHI目前选用的是bgfx</p>
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/blog/">Wind Soul</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">自制游戏引擎 - 图形API</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-05-28T05:10:43.823Z" title="Created 2022-05-28 13:10:43">2022-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-06-07T07:26:27.586Z" title="Updated 2022-06-07 15:26:27">2022-06-07</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="自制游戏引擎 - 图形API"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>游戏引擎RHI目前选用的是bgfx</p>
 <ul>
 <li>Pros<ul>
 <li>可以参考的代码比较多<ul>
@@ -447,7 +447,10 @@
 <li>bgfx对于DirectX12使用的shader同DirectX11，没有走DXIL(DirectX Intermediate Language)</li>
 </ul>
 <h2 id="其他的shader跨平台方案"><a href="#其他的shader跨平台方案" class="headerlink" title="其他的shader跨平台方案"></a>其他的shader跨平台方案</h2><ul>
+<li>Microsoft&#x2F;ShaderConductor - <a target="_blank" rel="noopener" href="https://github.com/Microsoft/ShaderConductor">https://github.com/Microsoft/ShaderConductor</a><ul>
 <li>HLSL通过DirectXShaderCompiler(<a target="_blank" rel="noopener" href="https://github.com/Microsoft/DirectXShaderCompiler)%E7%94%9F%E6%88%90DXIL%E6%94%AF%E6%8C%81DirectX">https://github.com/Microsoft/DirectXShaderCompiler)生成DXIL支持DirectX</a> 12，生成SPIRV直接供Vulkan使用，其他后端需要传递给SPIRV-Cross，来生成GLSL支持OpenGL，生成GLSL ES支持OpenGL ES，生成MSL支持Metal，生成HLSL支持DirectX9&#x2F;10&#x2F;11。相比于bgfx的方案，DirectX12的支持更好了，另外就是DirectXShaderCompiler跟glslang + glsl-optimizer的优劣对比，这里先不继续展开。</li>
+</ul>
+</li>
 </ul>
 <h2 id="bgfx源码剖析"><a href="#bgfx源码剖析" class="headerlink" title="bgfx源码剖析"></a>bgfx源码剖析</h2><p>TBD</p>
 <h2 id="其他RHI"><a href="#其他RHI" class="headerlink" title="其他RHI"></a>其他RHI</h2><ul>
