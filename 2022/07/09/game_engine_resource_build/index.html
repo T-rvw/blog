@@ -1,0 +1,197 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>自制游戏引擎 - 资源编译 | Wind Soul</title><meta name="author" content="Drimoon"><meta name="copyright" content="Drimoon"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="美术资源文件可以看成是代码的源文件，其中可能包含有不够优化的组织结构，冗余或者有轻微错误的数据，平时制作资源写入的临时数据，比如maya使用插件后容易在maya文件中留下插件自定义的信息。所以游戏引擎通常需要有一套资源编译工具来生成干净，专门为引擎需求服务的资源数据文件。 工具设计传统工具的工作流是：  引擎工具层有XXXImporter来导入某个格式的文件，然后生成引擎自定义文件，该工具由引擎编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自制游戏引擎 - 资源编译">
+<meta property="og:url" content="https://trvw.github.io/blog/2022/07/09/game_engine_resource_build/index.html">
+<meta property="og:site_name" content="Wind Soul">
+<meta property="og:description" content="美术资源文件可以看成是代码的源文件，其中可能包含有不够优化的组织结构，冗余或者有轻微错误的数据，平时制作资源写入的临时数据，比如maya使用插件后容易在maya文件中留下插件自定义的信息。所以游戏引擎通常需要有一套资源编译工具来生成干净，专门为引擎需求服务的资源数据文件。 工具设计传统工具的工作流是：  引擎工具层有XXXImporter来导入某个格式的文件，然后生成引擎自定义文件，该工具由引擎编">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2022-07-09T15:17:58.026Z">
+<meta property="article:modified_time" content="2022-07-09T16:46:58.801Z">
+<meta property="article:author" content="Drimoon">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://trvw.github.io/blog/2022/07/09/game_engine_resource_build/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '自制游戏引擎 - 资源编译',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-07-10 00:46:58'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">6</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/blog/">Wind Soul</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">自制游戏引擎 - 资源编译</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-07-09T15:17:58.026Z" title="Created 2022-07-09 23:17:58">2022-07-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-07-09T16:46:58.801Z" title="Updated 2022-07-10 00:46:58">2022-07-10</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="自制游戏引擎 - 资源编译"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>美术资源文件可以看成是代码的源文件，其中可能包含有不够优化的组织结构，冗余或者有轻微错误的数据，平时制作资源写入的临时数据，比如maya使用插件后容易在maya文件中留下插件自定义的信息。所以游戏引擎通常需要有一套资源编译工具来生成干净，专门为引擎需求服务的资源数据文件。</p>
+<h2 id="工具设计"><a href="#工具设计" class="headerlink" title="工具设计"></a>工具设计</h2><p>传统工具的工作流是：</p>
+<ul>
+<li>引擎工具层有XXXImporter来导入某个格式的文件，然后生成引擎自定义文件，该工具由引擎编辑器提供UI操作</li>
+<li>引擎运行时读取该自定义文件，简单处理后得到渲染要用的数据，显示</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>没有考虑过把引擎运行时读取文件的代码跟引擎解耦。以unreal engine为例，很难在其他引擎里使用uasset格式的文件，或者重新导出成某个格式的模型文件。</li>
+<li>缺少引擎到引擎数据沟通的考虑。假如我有一个移动端引擎和一个云端桌面引擎，当它们需要同时协作得到更好的体验时，需要有一份统一的数据格式，然后两个引擎各自写一遍导入，很难把共同的解析部分统一起来。</li>
+<li>没有考虑到从引擎反向把场景数据导出成某种开源格式的场景文件，回到DCC软件或者其他引擎里编辑或浏览。Ominiverse的demo表现出这个功能的支持是有一定价值的。</li>
+</ul>
+<p>为了达成以上这些目的，我们首先是跟传统工作流一样，要设计引擎自己的asset格式文件，或者叫场景格式文件。重点在于我们会将解析该格式到内存中的模块称为是生产者，读取内存生成该格式的模块称为是消费者。理解方式是，生产者会把资源数据写进内存，写之前需要先解析，做的工作是为当前进程服务；消费者呢，只需要读取内存中的资源数据，然后做任意的事情，可以是把内存的数据整理成vertex buffer，index buffer等提交到GPU渲染，也可以是本地CPU软渲染，也可以是什么都不画，只是把这块内存的数据导出到磁盘的某个文件里。</p>
+<p>对于unreal engine导入fbx生成uasset，然后渲染举例来说：fbx -&gt; ue资源编译工具 -&gt; uasset -&gt; 引擎内存 -&gt; 简单加工后提交到gpu渲染。ue资源编译工具是生产者，引擎是消费者。</p>
+<p>但我们拆得更细来说，其实是分为两个流程：<br>1.fbx -&gt; 内存 -&gt; uasset，负责fbx解析的代码是生产者，负责生成uasset的代码是消费者<br>2.uasset -&gt; 内存 -&gt; 渲染，负责uasset解析的代码是生产者，负责生成渲染数据的代码是消费者</p>
+<p>所以对于新设计的资源编译工具，我希望把它的粒度拆得更细，可以将单个资源编译工具拆成是两部分，也可以把引擎运行时拆成是两部分，自由组装。</p>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p>生产者们：glTFProducer, SceneFormatProducer<br>消费者们：SceneFormatConsumer, EngineRenderDataConsumer</p>
+<p>对应传统工具的工作流：</p>
+<ul>
+<li>以导入glTF为例，引擎工具层集成glTFProducer + SceneFormatConsumer两个模块，完成从glTF文件导入到生成场景格式文件</li>
+<li>引擎运行时集成的是SceneFormatProducer + EngineRenderDataConsumer两个模块，完成从导入场景格式文件到准备渲染数据提交</li>
+</ul>
+<p>这样子作为拆分，我们能让Producer依赖的SDK跟Consumer想做的事情解耦，两者天然没有依赖，然后将Producer和Consumer都作为dll之后，我们可以任意地进行Producer + Consumer的组合来完成不同的工作。<br>举两个例子：<br>1.SceneFormatProducer + SceneFormatConsumer ： 可以校验一来一去之后数据文件是否发生了变化，变化的内容就是当前导入导出不够稳定的地方<br>2.glTFProducer + EngineRenderDataConsumer ：跳过了SceneFormat直接在运行时导入模型文件然后渲染，这个功能在游戏快速迭代开发时会省很多力气，不需要转换SceneFormat来节约机器处理的时间，以及编辑器或者命令行操作的时间</p>
+<p>除了Producer和Consumer以外，有一个叫Processor的中间人，负责对接Producer和Consumer，它除了持有Producer和Consumer的实例进行调用以外，它可以在Producer完成工作后，对内存里的数据进行清洗，比如剔除掉退化三角形等。当然这个操作由Producer来做也可以，但如果Processor能够完美地做好这件事情，那么所有的Producer就不需要再写剔除退化三角形的代码了。所以Processor潜在的好处是可以写一些通用的数据处理算法，作为options供给Producer或者Consumer来打开，方便使用。同时也很适合开放给所有Producer和Consumer代码权限，让他们都能对同一块代码进行修改来达成数据互通的目的。</p>
+<p>想的更远一点的就是除了把Producer和Consumer分成两个模块，两个dll，还可以把他们部署成客户端 + 服务器，使用网络通信；或者说把单个Producer + 单个Consumer的关系变化成一对多，多对一，多对多等。业务场景的自由度会比较高。</p>
+<h2 id="编码实现"><a href="#编码实现" class="headerlink" title="编码实现"></a>编码实现</h2><ul>
+<li>SceneDatabase ：场景内存数据库<ul>
+<li>Meshes</li>
+<li>Materials</li>
+</ul>
+</li>
+<li>IProducer<ul>
+<li>派生glTFProducer<ul>
+<li>持有SceneDatabase指针，可读可写</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>IConsumer<ul>
+<li>派生SceneFormatConsumer<ul>
+<li>持有const SceneDatabase指针，只读</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Processor<ul>
+<li>连接Producer和Consumer开始工作前，申请一个新的SceneDatabase或者重置</li>
+<li>持有IProducer指针</li>
+<li>持有IConsumer指针</li>
+</ul>
+</li>
+</ul>
+<p>对于工具，它需要部署glTFProducer以及其他所以要支持模型格式的Producer，和自己引擎的SceneFormatConsumer。<br>对于运行时，它需要部署SceneFormatProducer，和自己的RenderDataConsumer。<br>可以通过makefile来使用同一份代码。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://trvw.github.io/blog">Drimoon</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://trvw.github.io/blog/2022/07/09/game_engine_resource_build/">https://trvw.github.io/blog/2022/07/09/game_engine_resource_build/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/blog/2022/05/30/game_engine_threading/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">自制游戏引擎 - 多线程</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Drimoon</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">6</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/T-rvw"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/T-rvw" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:jiajun.coding@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">随笔</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.</span> <span class="toc-text">工具设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">编码实现</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/07/09/game_engine_resource_build/" title="自制游戏引擎 - 资源编译"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 资源编译"/></a><div class="content"><a class="title" href="/blog/2022/07/09/game_engine_resource_build/" title="自制游戏引擎 - 资源编译">自制游戏引擎 - 资源编译</a><time datetime="2022-07-09T15:17:58.026Z" title="Created 2022-07-09 23:17:58">2022-07-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/30/game_engine_threading/" title="自制游戏引擎 - 多线程"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 多线程"/></a><div class="content"><a class="title" href="/blog/2022/05/30/game_engine_threading/" title="自制游戏引擎 - 多线程">自制游戏引擎 - 多线程</a><time datetime="2022-05-29T18:12:08.566Z" title="Created 2022-05-30 02:12:08">2022-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_particle_system/" title="自制游戏引擎 - 粒子系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 粒子系统"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_particle_system/" title="自制游戏引擎 - 粒子系统">自制游戏引擎 - 粒子系统</a><time datetime="2022-05-28T13:52:36.575Z" title="Created 2022-05-28 21:52:36">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_rhi/" title="自制游戏引擎 - 图形API"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 图形API"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_rhi/" title="自制游戏引擎 - 图形API">自制游戏引擎 - 图形API</a><time datetime="2022-05-28T05:10:43.823Z" title="Created 2022-05-28 13:10:43">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_design/" title="自制游戏引擎 - 软件设计"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 软件设计"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_design/" title="自制游戏引擎 - 软件设计">自制游戏引擎 - 软件设计</a><time datetime="2022-05-28T05:10:16.553Z" title="Created 2022-05-28 13:10:16">2022-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Drimoon</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
