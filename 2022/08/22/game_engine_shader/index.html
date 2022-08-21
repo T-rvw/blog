@@ -1,0 +1,358 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>自制游戏引擎 - Shader System | CatDogEngine</title><meta name="author" content="Cafe Team"><meta name="copyright" content="Cafe Team"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="bgfx跨平台shader方案在学习example工程的时候，你会发现代码里导入的shader是编译过的二进制文件(*.bin)。再打开shader存放的源码目录，会发现它不是主流shader文件格式的后缀名，而是.sc(shader c file)文件。这是bgfx自制的GLSL like的shader语言，即以GLSL为语法基础，加上一些自定义的宏作为扩展和跨平台语法替换。下文简称这门bgfx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自制游戏引擎 - Shader System">
+<meta property="og:url" content="https://trvw.github.io/blog/2022/08/22/game_engine_shader/index.html">
+<meta property="og:site_name" content="CatDogEngine">
+<meta property="og:description" content="bgfx跨平台shader方案在学习example工程的时候，你会发现代码里导入的shader是编译过的二进制文件(*.bin)。再打开shader存放的源码目录，会发现它不是主流shader文件格式的后缀名，而是.sc(shader c file)文件。这是bgfx自制的GLSL like的shader语言，即以GLSL为语法基础，加上一些自定义的宏作为扩展和跨平台语法替换。下文简称这门bgfx">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2022-08-21T18:19:13.177Z">
+<meta property="article:modified_time" content="2022-08-21T18:23:46.028Z">
+<meta property="article:author" content="Cafe Team">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://trvw.github.io/blog/2022/08/22/game_engine_shader/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '自制游戏引擎 - Shader System',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-08-22 02:23:46'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">7</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/blog/">CatDogEngine</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">自制游戏引擎 - Shader System</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-08-21T18:19:13.177Z" title="Created 2022-08-22 02:19:13">2022-08-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-08-21T18:23:46.028Z" title="Updated 2022-08-22 02:23:46">2022-08-22</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="自制游戏引擎 - Shader System"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="bgfx跨平台shader方案"><a href="#bgfx跨平台shader方案" class="headerlink" title="bgfx跨平台shader方案"></a>bgfx跨平台shader方案</h2><p>在学习example工程的时候，你会发现代码里导入的shader是编译过的二进制文件(*.bin)。再打开shader存放的源码目录，会发现它不是主流shader文件格式的后缀名，而是.sc(shader c file)文件。这是bgfx自制的GLSL like的shader语言，即以GLSL为语法基础，加上一些自定义的宏作为扩展和跨平台语法替换。下文简称这门bgfx shader language为BSL。</p>
+<p>BSL和GLSL的语法区别：</p>
+<ul>
+<li>每个shader文件开头必须用$input&#x2F;$output写明输入&#x2F;输出的数据类型，每一个数据类型需要写在varying.def.sc中来绑定语义</li>
+<li>varying.def.sc这个文件是唯一且必须提供的</li>
+<li>BSL的所有uniform变量均为float类型，不允许bool&#x2F;int</li>
+<li>单个参数的vec2&#x2F;3&#x2F;4构造函数被取消了，替代物是vec2&#x2F;3&#x2F;4_splat；2&#x2F;3&#x2F;4个参数的不受影响</li>
+<li>构造矩阵需要使用mtxFromCols&#x2F;mtxFromRows，指定行列</li>
+<li>mul(x, y)限定为x向量乘以y矩阵</li>
+<li>更多的宏：<a target="_blank" rel="noopener" href="https://github.com/bkaradzic/bgfx/blob/master/src/bgfx_shader.sh">https://github.com/bkaradzic/bgfx/blob/master/src/bgfx_shader.sh</a></li>
+</ul>
+<p>这套方案位于tools&#x2F;shaderc目录，从工程上可以分为这几块：</p>
+<ul>
+<li>用来加自定义宏的预处理器<ul>
+<li>fcpp : BSD开源： <a target="_blank" rel="noopener" href="https://github.com/bagder/fcpp">https://github.com/bagder/fcpp</a></li>
+</ul>
+</li>
+<li>GLSL编译前端<ul>
+<li>glslang：<a target="_blank" rel="noopener" href="https://github.com/KhronosGroup/glslang">https://github.com/KhronosGroup/glslang</a></li>
+</ul>
+</li>
+<li>对生成的GLSL进一步优化<ul>
+<li>glsl-optimizer：<a target="_blank" rel="noopener" href="https://github.com/aras-p/glsl-optimizer">https://github.com/aras-p/glsl-optimizer</a></li>
+</ul>
+</li>
+<li>SPIRV是一门shader的中间语言，就像all to llvm，这是终极方案<ul>
+<li>Vulkan使用的是SPIRV格式的字节码</li>
+<li>可以感受下SPIRV之前shader跨平台是多么地低效，甚至需要HLSL转Cg转GLSL: <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/25024372">https://zhuanlan.zhihu.com/p/25024372</a></li>
+<li>SPIRV转HLSL工具，SPRIV <ul>
+<li>spirv-cross：<a target="_blank" rel="noopener" href="https://github.com/KhronosGroup/SPIRV-Cross">https://github.com/KhronosGroup/SPIRV-Cross</a></li>
+</ul>
+</li>
+<li>SPIRV的各种工具集<ul>
+<li>spirv-opt：<a target="_blank" rel="noopener" href="https://github.com/KhronosGroup/SPIRV-Tools">https://github.com/KhronosGroup/SPIRV-Tools</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>shaderc<ul>
+<li>bgfx shader编译工具的名字，跟 <a target="_blank" rel="noopener" href="https://github.com/google/shaderc">https://github.com/google/shaderc</a> 没关系</li>
+</ul>
+</li>
+</ul>
+<p>Bgfx的Shader编译工具会在一开始从BSL编译出GLSL或者是HLSL作为初始的两种Shader语言，然后通过SPIRV转换</p>
+<ul>
+<li>OpenGL<ul>
+<li>BSL -&gt; GLSL</li>
+</ul>
+</li>
+<li>OpenGL ES<ul>
+<li>BSL -&gt; GLSL ES</li>
+</ul>
+</li>
+<li>Vulkan，WebGPU<ul>
+<li>BSL -&gt; GLSL -&gt; SPIRIV</li>
+</ul>
+</li>
+<li>DirectX<ul>
+<li>BSL -&gt; HLSL</li>
+</ul>
+</li>
+<li>Metal<ul>
+<li>BSL -&gt; HLSL -&gt; SPIRIV -&gt; MSL</li>
+</ul>
+</li>
+<li>主机特定的渲染后端：AGC&#x2F;GNM等<ul>
+<li>BSL -&gt; PSSL</li>
+</ul>
+</li>
+<li>Nvindia的RHI<ul>
+<li>bgfx暂未实现</li>
+</ul>
+</li>
+</ul>
+<p>Shaderc.exe是编译BSL的命令行工具，以example-01-cubes编译windows下dx11的shader为例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shaderc --type v --platform windows -p vs_4_0 -O 3 --varyingdef varying.def.sc -f vs_cubes.sc -o vs_cubes.bin</span><br><span class="line">shaderc --type f --platform windows -p ps_4_0 -O 3 --varyingdef varying.def.sc -f fs_cubes.sc -o fs_cubes.bin</span><br></pre></td></tr></table></figure>
+<p>Shaderc命令行参数的含义：</p>
+<ul>
+<li>type - 指定shader类型<ul>
+<li>v - vertex</li>
+<li>f - fragment</li>
+<li>c - compute</li>
+<li>g - geometry</li>
+<li>d - domain</li>
+<li>h - hull</li>
+<li>要注意vf以外的shader不是所有平台都支持的，具体需要查阅目标平台使用的图形API版本号</li>
+</ul>
+</li>
+<li>platform - 指定转换将要使用编译后shader二进制的目标平台<ul>
+<li>android<ul>
+<li>支持SPIRV，GLSL ES</li>
+</ul>
+</li>
+<li>asm.js<ul>
+<li>web平台，支持GLSL ES</li>
+</ul>
+</li>
+<li>ios<ul>
+<li>支持MSL，GLSL ES</li>
+</ul>
+</li>
+<li>linux<ul>
+<li>支持SPIRV，GLSL</li>
+</ul>
+</li>
+<li>orbis<ul>
+<li>PS平台</li>
+</ul>
+</li>
+<li>osx<ul>
+<li>支持MSL，GLSL</li>
+</ul>
+</li>
+<li>windows<ul>
+<li>支持HLSL，GLSL，GLSL ES，SPIRV</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>O - 0~3，指定优化等级</li>
+<li>varyingdef - 指定varying.def.sc这个绑定类型和语义的描述文件</li>
+<li>f - 指定输入shader文件</li>
+<li>o - 指定输出二进制文件</li>
+<li>其他参数<ul>
+<li>单个参数查看信息<ul>
+<li>v - 版本号</li>
+<li>h - 帮助文档</li>
+</ul>
+</li>
+<li>编译shader<ul>
+<li>不需要写其他信息，直接使用的参数<ul>
+<li>verbose - 输出更多信息</li>
+<li>debug - 输出调试信息</li>
+<li>disasm - 生成反汇编文件</li>
+<li>Werror - 警告视为错误</li>
+<li>preprocess - 只做预处理，可以用来看BSL生成的GLSL长什么样</li>
+<li>raw - 看起来可以用来接原生的GLSL<ul>
+<li>先打开这个，然后在每个.sc文件头上加一行$raw就可以跳过预处理器，还有接下来的glsl优化</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>profile - 指定shader model，默认是GLSL ES，控制逻辑比较多，需要再细看下<ul>
+<li>TBD</li>
+</ul>
+</li>
+<li>bin2c - 可以把bin文件嵌入到一个.h头文件里，省去磁盘IO</li>
+<li>i - 指定.sh(shader header file)的目录</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>目前bgfx这套方案遇到的一个问题是shader的开发效率，所有现成的HLSL或者GLSL源代码都无法直接应用，需要手动转译成BSL。比如之前提到的粒子系统需要对接别的中间件提供的shader，我们就需要把所有shader都写成是BSL，或者写一个HLSL&#x2F;GLSL反向生成BSL的小工具。</p>
+<p>我们希望实现BSL以外的其他方案能够直接使用常规的shader源代码，来减少工作量。</p>
+<ul>
+<li><p>直接使用HLSL：</p>
+<p>我们使用example-04-mesh这个例子来进行测试：</p>
+<ul>
+<li>第一步是新建一个测试文件夹，把用到的.sc代码和shaderc.exe都放好位置，目录结构应该是这样子的：<ul>
+<li>PlanATest<ul>
+<li>common<ul>
+<li>common.sh</li>
+<li>shaderlib.sh</li>
+</ul>
+</li>
+<li>test<ul>
+<li>shaderc.exe</li>
+<li>compile_hlsl.bat</li>
+<li>vs_mesh.sc</li>
+<li>fs_mesh.sc</li>
+<li>varying.def.sc</li>
+<li>bgfx_shader.sh</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>为了测试省力，先用–preprocess参数让编译器将BSL转译成HLSL，再用–raw参数让编译期跳过预处理器用HLSL代码直接生成二进制文件，我的编译脚本如下：<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">set CURRENT_WORK_DIRECTORY=%~dp0</span><br><span class="line">shaderc -i %CURRENT_WORK_DIRECTORY% --preprocess --type v --platform windows -p vs_4_0 -O 3 --varyingdef varying.def.sc -f vs_mesh.sc -o vs_mesh.hlsl</span><br><span class="line">shaderc -i %CURRENT_WORK_DIRECTORY% --preprocess --type f --platform windows -p ps_4_0 -O 3 --varyingdef varying.def.sc -f fs_mesh.sc -o fs_mesh.hlsl</span><br><span class="line"></span><br><span class="line">shaderc -i %CURRENT_WORK_DIRECTORY% --raw --type v --platform windows -p vs_4_0 -O 3 -f vs_mesh.hlsl -o vs_mesh_raw_hlsl.bin</span><br><span class="line">shaderc -i %CURRENT_WORK_DIRECTORY% --raw --type f --platform windows -p ps_4_0 -O 3 -f fs_mesh.hlsl -o fs_mesh_raw_hlsl.bin</span><br><span class="line">pause</span><br></pre></td></tr></table></figure></li>
+<li>复制粘贴到..\bgfx\examples\runtime\shaders\dx11目录下测试，注意确认下你的渲染后端是选择了dx11，不是的话可以改一下bgfx::init的调用代码，把type强制设置为dx11，注意我这里生成的bin文件特意加了_raw_hlsl的后缀，顺带修改下加载shader名称的代码<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bgfx::Init init;</span><br><span class="line">init.type     = bgfx::RendererType::Direct3D11;  </span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">m_program = <span class="built_in">loadProgram</span>(<span class="string">&quot;vs_mesh_raw_hlsl&quot;</span>, <span class="string">&quot;fs_mesh_raw_hlsl&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+<li>编译执行，可以正常使用</li>
+</ul>
+</li>
+<li><p>直接使用GLSL</p>
+<ul>
+<li>从compile_hlsl.bat复制一份compile_glsl.bat，修改shade model参数和输入输出的文件名：<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">set CURRENT_WORK_DIRECTORY=%~dp0</span><br><span class="line">shaderc -i %CURRENT_WORK_DIRECTORY% --preprocess --type v --platform windows -p 150 -O 3 --varyingdef varying.def.sc -f vs_mesh.sc -o vs_mesh.glsl</span><br><span class="line">shaderc -i %CURRENT_WORK_DIRECTORY% --preprocess --type f --platform windows -p 150 -O 3 --varyingdef varying.def.sc -f fs_mesh.sc -o fs_mesh.glsl</span><br><span class="line"></span><br><span class="line">shaderc -i %CURRENT_WORK_DIRECTORY% --raw --type v --platform windows -p 150 -O 3 -f vs_mesh.glsl -o vs_mesh_raw_glsl.bin</span><br><span class="line">shaderc -i %CURRENT_WORK_DIRECTORY% --raw --type f --platform windows -p 150 -O 3 -f fs_mesh.glsl -o fs_mesh_raw_glsl.bin</span><br><span class="line">pause</span><br></pre></td></tr></table></figure></li>
+<li>复制粘贴丢到..\bgfx\examples\runtime\shaders\glsl目录下测试，这里Windows系统必须主动去把bgfx::init调用强制改成OpenGL<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bgfx::Init init;</span><br><span class="line">init.type     = bgfx::RendererType::OpenGL;  </span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">m_program = <span class="built_in">loadProgram</span>(<span class="string">&quot;vs_mesh_raw_glsl&quot;</span>, <span class="string">&quot;fs_mesh_raw_glsl&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+<li>编译执行，可以正常使用</li>
+</ul>
+</li>
+<li><p>更多</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">const</span> Profile s_profiles[] =</span><br><span class="line">&#123;</span><br><span class="line">  &#123;  ShadingLang::ESSL,  <span class="number">100</span>,    <span class="string">&quot;100_es&quot;</span>     &#125;,</span><br><span class="line">  &#123;  ShadingLang::ESSL,  <span class="number">300</span>,    <span class="string">&quot;300_es&quot;</span>     &#125;,</span><br><span class="line">  &#123;  ShadingLang::ESSL,  <span class="number">310</span>,    <span class="string">&quot;310_es&quot;</span>     &#125;,</span><br><span class="line">  &#123;  ShadingLang::ESSL,  <span class="number">320</span>,    <span class="string">&quot;320_es&quot;</span>     &#125;,</span><br><span class="line">  &#123;  ShadingLang::HLSL,  <span class="number">300</span>,    <span class="string">&quot;s_3_0&quot;</span>      &#125;,</span><br><span class="line">  &#123;  ShadingLang::HLSL,  <span class="number">400</span>,    <span class="string">&quot;s_4_0&quot;</span>      &#125;,</span><br><span class="line">  &#123;  ShadingLang::HLSL,  <span class="number">500</span>,    <span class="string">&quot;s_5_0&quot;</span>      &#125;,</span><br><span class="line">  &#123;  ShadingLang::Metal, <span class="number">1000</span>,   <span class="string">&quot;metal&quot;</span>      &#125;,</span><br><span class="line">  &#123;  ShadingLang::PSSL,  <span class="number">1000</span>,   <span class="string">&quot;pssl&quot;</span>       &#125;,</span><br><span class="line">  &#123;  ShadingLang::SpirV, <span class="number">1311</span>,   <span class="string">&quot;spirv13-11&quot;</span> &#125;,</span><br><span class="line">  &#123;  ShadingLang::SpirV, <span class="number">1411</span>,   <span class="string">&quot;spirv14-11&quot;</span> &#125;,</span><br><span class="line">  &#123;  ShadingLang::SpirV, <span class="number">1512</span>,   <span class="string">&quot;spirv15-12&quot;</span> &#125;,</span><br><span class="line">  &#123;  ShadingLang::SpirV, <span class="number">1010</span>,   <span class="string">&quot;spirv10-10&quot;</span> &#125;,</span><br><span class="line">  &#123;  ShadingLang::SpirV, <span class="number">1010</span>,   <span class="string">&quot;spirv&quot;</span>      &#125;,</span><br><span class="line">  &#123;  ShadingLang::GLSL,  <span class="number">120</span>,    <span class="string">&quot;120&quot;</span>        &#125;,</span><br><span class="line">  &#123;  ShadingLang::GLSL,  <span class="number">130</span>,    <span class="string">&quot;130&quot;</span>        &#125;,</span><br><span class="line">  &#123;  ShadingLang::GLSL,  <span class="number">140</span>,    <span class="string">&quot;140&quot;</span>        &#125;,</span><br><span class="line">  &#123;  ShadingLang::GLSL,  <span class="number">150</span>,    <span class="string">&quot;150&quot;</span>        &#125;,</span><br><span class="line">  &#123;  ShadingLang::GLSL,  <span class="number">330</span>,    <span class="string">&quot;330&quot;</span>        &#125;,</span><br><span class="line">  &#123;  ShadingLang::GLSL,  <span class="number">400</span>,    <span class="string">&quot;400&quot;</span>        &#125;,</span><br><span class="line">  &#123;  ShadingLang::GLSL,  <span class="number">410</span>,    <span class="string">&quot;410&quot;</span>        &#125;,</span><br><span class="line">  &#123;  ShadingLang::GLSL,  <span class="number">420</span>,    <span class="string">&quot;420&quot;</span>        &#125;,</span><br><span class="line">  &#123;  ShadingLang::GLSL,  <span class="number">430</span>,    <span class="string">&quot;430&quot;</span>        &#125;,</span><br><span class="line">  &#123;  ShadingLang::GLSL,  <span class="number">440</span>,    <span class="string">&quot;440&quot;</span>        &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>问题记录：</p>
+<ul>
+<li>本来是打算用example-01-cubes作为例子，但是它用到了bgfx预定义的uniform变量里的u_modelViewProj这个mvp转换矩阵，这是我生成的hlsl里没有声明的，还需要额外把这些预定义uniforms的声明文件也找出来加进去，这是个很好解决的小问题。</li>
+<li>上述试验使用的是没有经过编译的glsl或者hlsl直接传进去用，可以再试一下拿glslang或者dxc去编译完再丢进去</li>
+<li>直接使用SPIRV字节码还需要看一下怎么传</li>
+<li>bgfx对于DirectX12使用的shader同DirectX11，没有走DXIL(DirectX Intermediate Language)</li>
+</ul>
+<h2 id="其他的shader跨平台方案"><a href="#其他的shader跨平台方案" class="headerlink" title="其他的shader跨平台方案"></a>其他的shader跨平台方案</h2><ul>
+<li>Microsoft&#x2F;ShaderConductor - <a target="_blank" rel="noopener" href="https://github.com/Microsoft/ShaderConductor">https://github.com/Microsoft/ShaderConductor</a><ul>
+<li>HLSL通过DirectXShaderCompiler(<a target="_blank" rel="noopener" href="https://github.com/Microsoft/DirectXShaderCompiler)%E7%94%9F%E6%88%90DXIL%E6%94%AF%E6%8C%81DirectX">https://github.com/Microsoft/DirectXShaderCompiler)生成DXIL支持DirectX</a> 12，生成SPIRV直接供Vulkan使用，其他后端需要传递给SPIRV-Cross，来生成GLSL支持OpenGL，生成GLSL ES支持OpenGL ES，生成MSL支持Metal，生成HLSL支持DirectX9&#x2F;10&#x2F;11。相比于bgfx的方案，DirectX12的支持更好了，另外就是DirectXShaderCompiler跟glslang + glsl-optimizer的优劣对比，这里先不继续展开。</li>
+</ul>
+</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li>bgfx doc - <a target="_blank" rel="noopener" href="https://bkaradzic.github.io/bgfx/tools.html#shader-compiler-shaderc">https://bkaradzic.github.io/bgfx/tools.html#shader-compiler-shaderc</a></li>
+<li>GLSL support in bgfx? - <a target="_blank" rel="noopener" href="https://github.com/bkaradzic/bgfx/issues/213">https://github.com/bkaradzic/bgfx/issues/213</a></li>
+<li>Shader交叉编译之梦 - <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/49069689">https://zhuanlan.zhihu.com/p/49069689</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://trvw.github.io/blog">Cafe Team</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://trvw.github.io/blog/2022/08/22/game_engine_shader/">https://trvw.github.io/blog/2022/08/22/game_engine_shader/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/blog/2022/07/09/game_engine_resource_build/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">自制游戏引擎 - 资源编译</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Cafe Team</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">7</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/T-rvw"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/T-rvw" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:jiajun.coding@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">随笔</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#bgfx%E8%B7%A8%E5%B9%B3%E5%8F%B0shader%E6%96%B9%E6%A1%88"><span class="toc-number">1.</span> <span class="toc-text">bgfx跨平台shader方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E7%9A%84shader%E8%B7%A8%E5%B9%B3%E5%8F%B0%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">其他的shader跨平台方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">3.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/08/22/game_engine_shader/" title="自制游戏引擎 - Shader System"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - Shader System"/></a><div class="content"><a class="title" href="/blog/2022/08/22/game_engine_shader/" title="自制游戏引擎 - Shader System">自制游戏引擎 - Shader System</a><time datetime="2022-08-21T18:19:13.177Z" title="Created 2022-08-22 02:19:13">2022-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/07/09/game_engine_resource_build/" title="自制游戏引擎 - 资源编译"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 资源编译"/></a><div class="content"><a class="title" href="/blog/2022/07/09/game_engine_resource_build/" title="自制游戏引擎 - 资源编译">自制游戏引擎 - 资源编译</a><time datetime="2022-07-09T15:17:58.026Z" title="Created 2022-07-09 23:17:58">2022-07-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/30/game_engine_threading/" title="自制游戏引擎 - 多线程"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 多线程"/></a><div class="content"><a class="title" href="/blog/2022/05/30/game_engine_threading/" title="自制游戏引擎 - 多线程">自制游戏引擎 - 多线程</a><time datetime="2022-05-29T18:12:08.566Z" title="Created 2022-05-30 02:12:08">2022-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_particle_system/" title="自制游戏引擎 - 粒子系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 粒子系统"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_particle_system/" title="自制游戏引擎 - 粒子系统">自制游戏引擎 - 粒子系统</a><time datetime="2022-05-28T13:52:36.575Z" title="Created 2022-05-28 21:52:36">2022-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_rhi/" title="自制游戏引擎 - 图形API"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 图形API"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_rhi/" title="自制游戏引擎 - 图形API">自制游戏引擎 - 图形API</a><time datetime="2022-05-28T05:10:43.823Z" title="Created 2022-05-28 13:10:43">2022-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Cafe Team</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
