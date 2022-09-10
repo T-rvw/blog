@@ -1,0 +1,234 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>自制游戏引擎 - 编辑器 | CatDogEngine</title><meta name="author" content="Cafe Team"><meta name="copyright" content="Cafe Team"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="游戏引擎的编辑器是一个比较尴尬的模块，一来是很多程序员觉得它技术深度很低，而且涉及很多UI，用户交互的功能；二来是它对于引擎的重要性又非常高，引擎香也怕编辑器不好用；三来是因为编辑器还是有一定复杂度的，类似Maya之类的工业软件开发，游戏程序员并不擅长理解大规模软件工程，架构下有游戏引擎，游戏专业性中间件等的依赖，上有非常多零碎的小功能需要管理，比如插件，资源商店，与其他DCC软件的互通工作流等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自制游戏引擎 - 编辑器">
+<meta property="og:url" content="https://trvw.github.io/blog/2022/09/10/game_editor/index.html">
+<meta property="og:site_name" content="CatDogEngine">
+<meta property="og:description" content="游戏引擎的编辑器是一个比较尴尬的模块，一来是很多程序员觉得它技术深度很低，而且涉及很多UI，用户交互的功能；二来是它对于引擎的重要性又非常高，引擎香也怕编辑器不好用；三来是因为编辑器还是有一定复杂度的，类似Maya之类的工业软件开发，游戏程序员并不擅长理解大规模软件工程，架构下有游戏引擎，游戏专业性中间件等的依赖，上有非常多零碎的小功能需要管理，比如插件，资源商店，与其他DCC软件的互通工作流等。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2022-09-10T07:30:41.704Z">
+<meta property="article:modified_time" content="2022-09-10T10:06:53.890Z">
+<meta property="article:author" content="Cafe Team">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://trvw.github.io/blog/2022/09/10/game_editor/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '自制游戏引擎 - 编辑器',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-09-10 18:06:53'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">8</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/blog/">CatDogEngine</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">自制游戏引擎 - 编辑器</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-09-10T07:30:41.704Z" title="Created 2022-09-10 15:30:41">2022-09-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-09-10T10:06:53.890Z" title="Updated 2022-09-10 18:06:53">2022-09-10</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="自制游戏引擎 - 编辑器"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>游戏引擎的编辑器是一个比较尴尬的模块，一来是很多程序员觉得它技术深度很低，而且涉及很多UI，用户交互的功能；二来是它对于引擎的重要性又非常高，引擎香也怕编辑器不好用；三来是因为编辑器还是有一定复杂度的，类似Maya之类的工业软件开发，游戏程序员并不擅长理解大规模软件工程，架构下有游戏引擎，游戏专业性中间件等的依赖，上有非常多零碎的小功能需要管理，比如插件，资源商店，与其他DCC软件的互通工作流等。</p>
+<h2 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h2><p>路线上，第一种是引擎先自举UI模块，编辑器基于引擎自绘UI框架来制作；第二种是使用操作系统或者语言等提供的外部UI框架来制作。</p>
+<p>其实从研发角度来说，第一种肯定是最好的，做编辑器的同时可以把自己的UI模块开发，测试一遍，因为是自己渲染的，所以很容易跨平台，UI也能定制得比较好。例如Unreal Engine是引擎自己开发的Slate UI来做编辑器。</p>
+<p>但是从实际上来说，第二种方案程序员参与开发的门槛更低，比如使用C# Winforms&#x2F;Wpf这些，微软有详细的文档，StackOverflow有各种问题的解决方法，基本上面向google编程就可以了。而第一种方法遇到问题要么自己跟UI模块源码，要么联系这个模块的程序员进行沟通。</p>
+<p>所以，为了低成本地快速得到一个能用的编辑器，我会选择第二种做法，Sony在GDC 2014开源的Sony ATF就是一套C# Winforms&#x2F;Wpf的编辑器框架，同时也有LevelEditor的例子可以参考怎么利用框架开发。缺点是：编辑器只能在Windows下跑，UI风格是符合系统UI的，不能进行很多的定制化的UI设计。</p>
+<h2 id="LevelEditor工程分析"><a href="#LevelEditor工程分析" class="headerlink" title="LevelEditor工程分析"></a>LevelEditor工程分析</h2><p>这个工程分三块：</p>
+<ul>
+<li><p>ATF框架代码，也就是”Atf.***”命名的项目，通常是不用上层进行修改，作为编辑器项目外部依赖组件的，但实际上因为Sony的这个工程主要面向inhouse的内部项目，能用就行，所以代码质量比较一般，比如当你想修改编辑器界面的某些图标时，你会发现某些图标的ico，png资源是嵌入在ATF的dll里的，需要重新编译ATF的dll</p>
+</li>
+<li><p>LevelEditor逻辑代码，简单分了一层Core和非Core的，Core里主要是抽象一些接口类，引擎代理类，编辑器命令类，工具类等；非Core是具体业务，也是启动项目，比如动画编辑器，地形编辑器等。但实际上也会有一些不合理的发现，比如序列化&#x2F;反序列化的模块我觉得应该是Core的内容</p>
+</li>
+<li><p>DirectX11的例子渲染器，C#负责引擎API绑定的模块。这部分主要是渲染相关API设计，C#这里的代码主要是关于编辑器DesignView，GameView等渲染对接的功能，然后通过dll的方式调用引擎C API</p>
+</li>
+</ul>
+<p>总体来说小问题还是有一些的，比如winforms有些窗口的设计视图无法打开，项目分层了但没分干净等。不过还能接受，毕竟能免费得到一个开源协议非常宽松，现成能跑的游戏编辑器，同时它的大部分代码编写还是比较干净的，有合理的命名规范，详细的代码文档，渲染器API也有很多参数，返回值注释，代码分也清楚了文件夹和工程。</p>
+<h2 id="与自己的引擎对接"><a href="#与自己的引擎对接" class="headerlink" title="与自己的引擎对接"></a>与自己的引擎对接</h2><p>我建议的做法是先浏览一下LvEdRenderingEngine.h里导出的所有C API，然后看懂之后，我只需要把这个文件里的API导出部分全部拷贝到自己的引擎代码里，把实现层全部改成空函数。然后把未定义的其他类型前置声明，可以通过编译就好。这样子编辑器仍然可以编译启动，只是某些跟渲染画面有关的功能被破坏了。</p>
+<p>接下来就是按照LvEdRenderingEngine的API去还原渲染画面了。可以在LevelEditor项目属性的Debug页面Enable Native Debug，然后直接在这个C++渲染器里挂断点。</p>
+<p>这里我们只提最少的跟画面输出到编辑器内渲染相关的API：</p>
+<ul>
+<li><p>初始化 LvEd_Initialize</p>
+<ul>
+<li>logCallback<ul>
+<li>这个是C#那边的一个包装Console.WriteLine之类的log输出函数，只要把它包装成Delegate类型，然后传到引擎这里，是可以直接当函数指针来使用的</li>
+</ul>
+</li>
+<li>invalidateCallback<ul>
+<li>类似的callback，用于主动告知editor当前的view需要刷新</li>
+</ul>
+</li>
+<li>outEngineInfo<ul>
+<li>输出一份关于初始化引擎信息的xml字符串给编辑器，用处比如是告诉编辑器引擎当前支持的模型，贴图格式</li>
+</ul>
+</li>
+<li>代码逻辑<ul>
+<li>按序初始化各个功能模块<ul>
+<li>DeviceManager : DirectX11初始化，渲染设备</li>
+<li>GpuResourceFactory : 创建GPU资源的工厂类，传cpu buff创建VB，IB，Texture，Shader等</li>
+<li>RSCache : 缓存渲染状态描述对象，比如RasterizeState，DepthStencilState，BlendState，SamplerState等</li>
+<li>TextureLib ：CPU端的Texture管理</li>
+<li>ShapeLib : CPU端的一些程序化生成几何体，可能是这个编辑器还打算支持一些简单的建模</li>
+<li>ShaderLib ：管理加载好的不同功能Shader，Billboard，Skybox</li>
+<li>FontRenderer ：字体自绘，按字体生成quad和贴图</li>
+<li>ResourceManager ：加载磁盘资源到CPU内存</li>
+<li>RenderContext ：管理渲染的其他上下文，camera，light，fog等</li>
+</ul>
+</li>
+<li>自己引擎要接入的时候，需要剥离开窗口设备和渲染设备到两个类里，对于Editor来说，只需要渲染设备。同时要把游戏循环拆出来，对于编辑器来说，我们只需要提供一个单帧画面驱动的API，C#端可以自己控制触发的频率，比如DesignView的帧率它可以设个30，或者只有数据更新时才刷新，或者有那种动态效果时才更新。当然，你也可以选择把渲染循环跑在一个单独的线程里之类的做法。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>对象管理相关的API</p>
+<ul>
+<li>编辑器操作引擎对象的第一种做法是，写各种各样对象具体怎么操作的API；第二种是元数据驱动，把引擎对象理解成一份xml数据，编辑器只会修改这份xml，然后引擎检测到新的xml之后可以按最新的配置重建这个对象，或者刷新。</li>
+<li>LevelEditor用的类似第一种做法，但是设计了一套方法简化API编写，用少量的性能开销换取Editor开发便利：<ul>
+<li>u64 ObjectGUID<ul>
+<li>Native层对象的ID，直接取对象内存地址就好了，x64下就是u64</li>
+</ul>
+</li>
+<li>u32 ObjectTypeGUID<ul>
+<li>Native层每一个类名当作字符串，通过Hash函数生成TypeID，全局唯一</li>
+</ul>
+</li>
+<li>u32 ObjectPropertyUID<ul>
+<li>由编辑器向Native层注册的C# Property，也是通过字符串哈希生成的唯一ID，但是全局下由于不同类可能有同名的属性，所以还要和ObjectTypeGUID两个u32拼一个u64，在运行时使用确保全局唯一，下面简称tpid</li>
+<li>编辑器注册C# Property的时候，同时会把Set，Get函数也一起注册进来，tpid存表里</li>
+</ul>
+</li>
+<li>u32 ObjectListUID<ul>
+<li>Native层数组类型容器(vector, list之类)的ID，也是容器起个名字进行哈希，再跟type拼u64保证全局唯一，同时C#会把容器的add，remove方法注册进来</li>
+</ul>
+</li>
+<li>有了这些设计之后，我们只要导出关于这些ID的注册，释放，Get&#x2F;Set方法就可以完成所有运行时对象管理了。举个例子，我们在编辑器初始化的时候想要为DesignView，GameView各自创建好一个交换链对象，然后把Window Handle传过去绑定好。这个过程在这套设计下，变成了：<ul>
+<li>C++提前注册好”SwapChain”对应class SwapChain，然后把创建该对象的函数指针也绑定过去</li>
+<li>C#控制初始化的时候，调用GameEngine.GetObjectTypeId(“SwapChain”)查询C++层class SwapChain的类型ID，取名swapChainId</li>
+<li>C#调用创建SwapChain对象，把swapChainId，窗口句柄，再加上指针的大小一起传过去即可，GameEngine.CreateObject(swapChainId, this.Handle, IntPtr.Size);</li>
+<li>CreateObject这个API在C++层会按照ObjectTypeGUID找到class SwapChain之前绑定的创建函数指针，把Handle解释成IntPtr.Size的数值转换成参数类型传进去，调用</li>
+<li>所有C++注册过的类型，可以搜索GobBridge::RegisterObject查询，每个类型编辑器可以修改的属性，也是类似的方法GobBridge::RegisterProperty。其实也是可以更加方便的，通过在C++里读取Xml的类数据，自动注册</li>
+</ul>
+</li>
+<li>所以LevelEditor所有运行时对象都是由这种取巧的方法驱动的，除了一些API调用可能没有抽出成对象，或者调用函数不适合这样子做，只剩下很少的一批了：<ul>
+<li>字体，DrawCall，VB&#x2F;IB创建，渲染帧Begin，Update，End，修改RenderState，选中，设置当前打开的关卡文件</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>回归主题，我们可以借鉴API设计的框架，把运行时对象注册，管理的方法借鉴过来使用，会让我们多出一些映射u32，u64到函数指针的哈希表，但是可以少写很多API代码。然后C++里注册类型的代码，我们可以暂时先手写，然后加上用一个xml文件跟class完成互相import&#x2F;export，序列化&#x2F;反序列化的meta data设计，最后读取xml文件来完成注册。xml注册这一步是引擎启动期间，所以未来C++也是可以利用模板元编程优化掉的，不过需要优化的情况应该很少，需要注册来给Editor使用的类型数量是不多的，不至于卡在这一步，同时编辑器项目启动慢几秒也无所谓，主要是稳定好用。</p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://trvw.github.io/blog">Cafe Team</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://trvw.github.io/blog/2022/09/10/game_editor/">https://trvw.github.io/blog/2022/09/10/game_editor/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/blog/2022/08/22/game_engine_shader/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">自制游戏引擎 - Shader System</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Cafe Team</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/blog/archives/"><div class="headline">Articles</div><div class="length-num">8</div></a><a href="/blog/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/blog/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/T-rvw"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/T-rvw" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:jiajun.coding@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">随笔</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">技术选型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LevelEditor%E5%B7%A5%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">LevelEditor工程分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E8%87%AA%E5%B7%B1%E7%9A%84%E5%BC%95%E6%93%8E%E5%AF%B9%E6%8E%A5"><span class="toc-number">3.</span> <span class="toc-text">与自己的引擎对接</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/09/10/game_editor/" title="自制游戏引擎 - 编辑器"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 编辑器"/></a><div class="content"><a class="title" href="/blog/2022/09/10/game_editor/" title="自制游戏引擎 - 编辑器">自制游戏引擎 - 编辑器</a><time datetime="2022-09-10T07:30:41.704Z" title="Created 2022-09-10 15:30:41">2022-09-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/08/22/game_engine_shader/" title="自制游戏引擎 - Shader System"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - Shader System"/></a><div class="content"><a class="title" href="/blog/2022/08/22/game_engine_shader/" title="自制游戏引擎 - Shader System">自制游戏引擎 - Shader System</a><time datetime="2022-08-21T18:19:13.177Z" title="Created 2022-08-22 02:19:13">2022-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/07/09/game_engine_resource_build/" title="自制游戏引擎 - 资源编译"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 资源编译"/></a><div class="content"><a class="title" href="/blog/2022/07/09/game_engine_resource_build/" title="自制游戏引擎 - 资源编译">自制游戏引擎 - 资源编译</a><time datetime="2022-07-09T15:17:58.026Z" title="Created 2022-07-09 23:17:58">2022-07-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/30/game_engine_threading/" title="自制游戏引擎 - 多线程"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 多线程"/></a><div class="content"><a class="title" href="/blog/2022/05/30/game_engine_threading/" title="自制游戏引擎 - 多线程">自制游戏引擎 - 多线程</a><time datetime="2022-05-29T18:12:08.566Z" title="Created 2022-05-30 02:12:08">2022-05-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2022/05/28/game_engine_particle_system/" title="自制游戏引擎 - 粒子系统"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="自制游戏引擎 - 粒子系统"/></a><div class="content"><a class="title" href="/blog/2022/05/28/game_engine_particle_system/" title="自制游戏引擎 - 粒子系统">自制游戏引擎 - 粒子系统</a><time datetime="2022-05-28T13:52:36.575Z" title="Created 2022-05-28 21:52:36">2022-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Cafe Team</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
